@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 640">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1280" y2="640" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#1e1b4b"/>
+      <stop offset=".55" stop-color="#4c1d95"/>
+      <stop offset="1" stop-color="#6d28d9"/>
+    </linearGradient>
+    <linearGradient id="lg" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#4f46e5"/>
+      <stop offset="1" stop-color="#7c3aed"/>
+    </linearGradient>
+    <linearGradient id="tt" x1="0" y1="0" x2="1" y2="0">
+      <stop stop-color="#a5b4fc"/>
+      <stop offset="1" stop-color="#22d3ee"/>
+    </linearGradient>
+  </defs>
+  <rect width="1280" height="640" fill="url(#bg)"/>
+  <circle cx="1120" cy="80" r="180" fill="#22d3ee" opacity=".12"/>
+  <circle cx="120" cy="580" r="150" fill="#a5b4fc" opacity=".12"/>
+  <g transform="translate(120,190)">
+    <rect x="0" y="0" width="260" height="260" rx="60" fill="url(#lg)"/>
+    <rect x="83" y="49" width="94" height="163" rx="20" fill="none" stroke="#fff" stroke-width="14"/>
+    <line x1="112" y1="190" x2="148" y2="190" stroke="#fff" stroke-width="14" stroke-linecap="round"/>
+    <path d="M130 80v55M113 117l17 17 17-17" fill="none" stroke="#22d3ee" stroke-width="15" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <text x="430" y="290" font-family="Segoe UI,Arial,sans-serif" font-size="96" font-weight="800" fill="#ffffff">any_2_apk</text>
+  <text x="432" y="360" font-family="Segoe UI,Arial,sans-serif" font-size="44" font-weight="700" fill="url(#tt)">Turn Any Website into an Android App</text>
+  <g font-family="Segoe UI,Arial,sans-serif" font-size="26" fill="#ddd6fe">
+    <text x="432" y="430">⚡ 100% in-browser   🆓 Free forever   🔑 No signup</text>
+  </g>
+  <text x="432" y="560" font-family="Segoe UI,Arial,sans-serif" font-size="24" fill="#a5b4fc">© 2026 salim-slimani</text>
+</svg>

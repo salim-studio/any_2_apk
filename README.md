@@ -1,4 +1,12 @@
-# any_2_apk 📱 — Turn Any Website into an Android App
+<p align="center">
+  <img src="assets/logo.svg" width="120" alt="any_2_apk logo">
+</p>
+
+# any_2_apk — Turn Any Website into an Android App
+
+<p align="center">
+  <img src="assets/banner.svg" width="100%" alt="any_2_apk banner">
+</p>
 
 **Live site:** https://salim-studio.github.io/any_2_apk/
 
