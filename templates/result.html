@@ -1,0 +1,19 @@
+<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>any_2_apk | تم التوليد</title>
+<style>body{font-family:Segoe UI,Tahoma;background:#f1f5f9}main{max-width:640px;margin:30px auto;background:#fff;padding:24px;border-radius:14px}code{background:#f1f5f9;padding:2px 8px;border-radius:6px}a.btn{display:inline-block;background:#16a34a;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;margin:10px 0}ol{line-height:2}</style></head>
+<body><main>
+<h1>✅ any_2_apk: تم توليد مشروع {{ app_name }}</h1>
+{% if fname %}
+<p>الحزمة: <code>{{ package }}</code></p>
+{% if url %}<p>الموقع: <code>{{ url }}</code></p>{% endif %}
+<a class="btn" href="/download/{{ fname }}">⬇️ تحميل مشروع الأندرويد (ZIP)</a>
+<h3>كيف تحصل على APK؟ (اختر طريقة)</h3>
+<ol>
+<li><b>سحابياً مجاناً (الأسهل):</b> ارفع محتويات الـ ZIP إلى مستودع GitHub جديد → تبويب Actions → حمّل <code>app-debug.apk</code>.</li>
+<li><b>محلياً:</b> افتح المشروع في Android Studio → Run، أو نفذ <code>./gradlew assembleDebug</code>.</li>
+<li><b>بديل سريع بدون بناء:</b> استخدم موقع PWABuilder.com — أدخل نفس الرابط وحمّل APK جاهزاً.</li>
+</ol>
+{% else %}
+<p>لتحويل exe إلى أندرويد: لا يوجد تحويل مباشر. الحلول: نسخة ويب + هذا المولد، أو Flutter، أو Python+Kivy/Buildozer.</p>
+{% endif %}
+<p><a href="/">→ تحويل موقع آخر</a></p>
+</main></body></html>

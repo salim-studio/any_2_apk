@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>any_2_apk | حوّل موقعك إلى APK</title>
+<style>body{font-family:Segoe UI,Tahoma;background:#f1f5f9;margin:0}main{max-width:640px;margin:30px auto;background:#fff;padding:24px;border-radius:14px;box-shadow:0 4px 20px #0001}h1{color:#1a73e8}label{display:block;margin:12px 0 4px;font-weight:bold}input{width:100%;padding:10px;border:1px solid #cbd5e1;border-radius:8px;box-sizing:border-box}button{background:#1a73e8;color:#fff;border:0;padding:12px 20px;border-radius:8px;font-size:16px;cursor:pointer;margin-top:16px;width:100%}.msg{background:#fef3c7;padding:10px;border-radius:8px;margin:8px 0}.note{background:#eef2ff;padding:12px;border-radius:8px;margin-top:16px;font-size:14px}</style>
+</head>
+<body><main>
+<h1>📱 any_2_apk — حوّل موقعك إلى APK</h1>
+<p>أدخل بيانات موقعك وسنولد لك مشروع أندرويد (WebView) جاهزاً للبناء، مع ملف GitHub Actions يبني لك الـ APK مجاناً في السحابة.</p>
+{% with m=get_flashed_messages() %}{% for x in m %}<div class="msg">{{x}}</div>{% endfor %}{% endwith %}
+<form method="post" enctype="multipart/form-data">
+<label>اسم التطبيق</label><input name="app_name" placeholder="مثال: متجري" required>
+<label>اسم الحزمة (Package)</label><input name="package" placeholder="com.example.myapp" required dir="ltr">
+<label>رابط الموقع</label><input name="url" placeholder="https://example.com" required dir="ltr">
+<label>لون التطبيق</label><input type="color" name="theme" value="#1a73e8">
+<label>أيقونة (اختياري PNG)</label><input type="file" name="icon" accept=".png,.jpg">
+<button type="submit">⚙️ توليد مشروع APK</button>
+</form>
+<div class="note">⚠️ تنبيه صادق: لا توجد أداة تحوّل ملفات <b>exe</b> أو برامج ويندوز مباشرة إلى APK. الطريقة الصحيحة هي تغليف نسخة الويب (هذا التطبيق) أو إعادة كتابة التطبيق بلغة أندرويد. أي موقع يدعي تحويل exe→apk بضغطة زر غالباً خدعة.</div>
+</main></body></html>
