@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>any_2_apk | حوّل موقعك إلى APK</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<style>
+body{font-family:Segoe UI,Tahoma,Arial;background:#f1f5f9;margin:0}
+main{max-width:660px;margin:30px auto;background:#fff;padding:24px;border-radius:14px;box-shadow:0 4px 20px #0001}
+h1{color:#1a73e8;margin-top:0}
+label{display:block;margin:12px 0 4px;font-weight:bold}
+input{width:100%;padding:10px;border:1px solid #cbd5e1;border-radius:8px;box-sizing:border-box}
+button{background:#1a73e8;color:#fff;border:0;padding:12px 20px;border-radius:8px;font-size:16px;cursor:pointer;margin-top:16px;width:100%}
+button:disabled{background:#94a3b8;cursor:wait}
+.msg{background:#fef3c7;padding:10px;border-radius:8px;margin:8px 0}
+.ok{background:#dcfce7;padding:12px;border-radius:8px;margin:12px 0}
+.note{background:#eef2ff;padding:12px;border-radius:8px;margin-top:16px;font-size:14px}
+code{background:#f1f5f9;padding:2px 8px;border-radius:6px}
+ol{line-height:2}
+footer{text-align:center;color:#64748b;font-size:13px;margin-top:16px}
+</style>
+</head>
+<body><main>
+<h1>📱 any_2_apk</h1>
+<p>حوّل أي موقع ويب إلى مشروع أندرويد (WebView) جاهز للبناء إلى APK — <b>يعمل كلياً في متصفحك</b> بدون سيرفر.</p>
+<div id="msgs"></div>
+<form id="f">
+<label>اسم التطبيق</label><input id="app_name" placeholder="مثال: متجري" required>
+<label>اسم الحزمة (Package)</label><input id="package" placeholder="com.example.myapp" required dir="ltr">
+<label>رابط الموقع</label><input id="url" placeholder="https://example.com" required dir="ltr">
+<label>لون التطبيق</label><input type="color" id="theme" value="#1a73e8">
+<label>أيقونة (اختياري PNG/JPG أقل من 2MB)</label><input type="file" id="icon" accept=".png,.jpg,.jpeg">
+<button type="submit" id="btn">⚙️ توليد وتحميل مشروع APK (ZIP)</button>
+</form>
+<div id="done"></div>
+<div class="note">⚠️ تنبيه صادق: لا توجد أداة تحوّل ملفات <b>exe</b> أو برامج ويندوز مباشرة إلى APK. الطريقة الصحيحة هي تغليف نسخة الويب (هذه الأداة) أو إعادة كتابة التطبيق بلغة أندرويد.</div>
+<footer>any_2_apk — نسخة Flask موجودة في المستودع (<code>app.py</code>) لمن يريد تشغيلها محلياً.</footer>
+</main>
+<script>
+const PKG_RE = /^[a-z][a-z0-9_]*(\.[a-z][a-z0-9_]*)+$/;
+function err(m){document.getElementById('msgs').innerHTML='<div class="msg">'+m+'</div>';}
+function javaPath(pkg){return "app/src/main/java/"+pkg.replace(/\./g,"/")+"/MainActivity.kt";}
+function manifest(appName, cleartext){
+return '<?xml version="1.0" encoding="utf-8"?>\n<manifest xmlns:android="http://schemas.android.com/apk/res/android">\n    <uses-permission android:name="android.permission.INTERNET" />\n    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />\n    <application\n        android:label="'+appName+'"\n        android:icon="@mipmap/ic_launcher"\n        android:theme="@style/Theme.WebToApk"\n        android:usesCleartextTraffic="'+cleartext+'">\n        <activity\n            android:name=".MainActivity"\n            android:exported="true"\n            android:configChanges="orientation|screenSize|keyboardHidden">\n            <intent-filter>\n                <action android:name="android.intent.action.MAIN" />\n                <category android:name="android.intent.category.LAUNCHER" />\n            </intent-filter>\n        </activity>\n    </application>\n</manifest>\n';}
+function mainActivity(pkg, url){
+return 'package '+pkg+'\n\nimport android.annotation.SuppressLint\nimport android.os.Bundle\nimport android.webkit.WebChromeClient\nimport android.webkit.WebResourceRequest\nimport android.webkit.WebSettings\nimport android.webkit.WebView\nimport android.webkit.WebViewClient\nimport androidx.appcompat.app.AppCompatActivity\nimport androidx.swiperefreshlayout.widget.SwipeRefreshLayout\n\nclass MainActivity : AppCompatActivity() {\n    private lateinit var webView: WebView\n    private lateinit var swipe: SwipeRefreshLayout\n    private val startUrl = "'+url+'"\n\n    @SuppressLint("SetJavaScriptEnabled")\n    override fun onCreate(savedInstanceState: Bundle?) {\n        super.onCreate(savedInstanceState)\n        setContentView(R.layout.activity_main)\n        webView = findViewById(R.id.webview)\n        swipe = findViewById(R.id.swipe)\n        val s: WebSettings = webView.settings\n        s.javaScriptEnabled = true\n        s.domStorageEnabled = true\n        s.mediaPlaybackRequiresUserGesture = false\n        s.loadWithOverviewMode = true\n        s.useWideViewPort = true\n        webView.webViewClient = object : WebViewClient() {\n            override fun shouldOverrideUrlLoading(view: WebView, req: WebResourceRequest): Boolean {\n                return false\n            }\n        }\n        webView.webChromeClient = WebChromeClient()\n        swipe.setOnRefreshListener { webView.reload() }\n        webView.loadUrl(startUrl)\n    }\n\n    override fun onBackPressed() {\n        if (::webView.isInitialized && webView.canGoBack()) webView.goBack()\n        else super.onBackPressed()\n    }\n}\n';}
+const LAYOUT = '<?xml version="1.0" encoding="utf-8"?>\n<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"\n    android:id="@+id/swipe"\n    android:layout_width="match_parent"\n    android:layout_height="match_parent">\n    <WebView\n        android:id="@+id/webview"\n        android:layout_width="match_parent"\n        android:layout_height="match_parent" />\n</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>\n';
+function buildGradle(pkg){
+return "plugins { id 'com.android.application'; id 'org.jetbrains.kotlin.android' }\nandroid {\n    namespace '"+pkg+"'\n    compileSdk 34\n    defaultConfig {\n        applicationId '"+pkg+"'\n        minSdk 24\n        targetSdk 34\n        versionCode 1\n        versionName \"1.0\"\n    }\n    buildTypes {\n        release { minifyEnabled false }\n    }\n}\ndependencies {\n    implementation 'androidx.core:core-ktx:1.12.0'\n    implementation 'androidx.appcompat:appcompat:1.6.1'\n    implementation 'com.google.android.material:1.11.0'\n    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'\n}\n";}
+const WORKFLOW = "name: Build APK\non: [push, workflow_dispatch]\njobs:\n  build:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - uses: actions/setup-java@v4\n        with: { distribution: temurin, java-version: 17 }\n      - uses: gradle/actions/setup-gradle@v3\n      - run: chmod +x gradlew\n      - run: ./gradlew assembleDebug\n      - uses: actions/upload-artifact@v4\n        with: { name: app-debug, path: app/build/outputs/apk/debug/app-debug.apk }\n";
+document.getElementById('f').addEventListener('submit', async (e)=>{
+e.preventDefault();
+document.getElementById('msgs').innerHTML='';
+const appName=document.getElementById('app_name').value.trim();
+const pkg=document.getElementById('package').value.trim();
+let url=document.getElementById('url').value.trim();
+const theme=document.getElementById('theme').value;
+const iconFile=document.getElementById('icon').files[0];
+const errs=[];
+if(appName.length<2)errs.push('اسم التطبيق قصير جداً.');
+if(!PKG_RE.test(pkg))errs.push('اسم الحزمة غير صالح. مثال صحيح: com.example.myapp');
+try{const u=new URL(url);if(u.protocol!=='http:'&&u.protocol!=='https:')throw 0;}catch{errs.push('الرابط غير صالح. يجب أن يبدأ بـ https://');}
+if(iconFile&&iconFile.size>2*1024*1024)errs.push('حجم الأيقونة يجب أن يكون أقل من 2MB');
+if(errs.length){err(errs.join('<br>'));return;}
+const btn=document.getElementById('btn');btn.disabled=true;btn.textContent='⏳ جارٍ التوليد...';
+try{
+const zip=new JSZip();
+const allowHttp=url.startsWith('http://');
+zip.file('settings.gradle','pluginManagement { repositories { google(); mavenCentral(); gradlePluginPortal() } }\ndependencyResolutionManagement { repositories { google(); mavenCentral() } }\nrootProject.name = "'+appName+'"\ninclude \':app\'\n');
+zip.file('app/build.gradle',buildGradle(pkg));
+zip.file('app/src/main/AndroidManifest.xml',manifest(appName,String(allowHttp).toLowerCase()));
+zip.file(javaPath(pkg),mainActivity(pkg,url));
+zip.file('app/src/main/res/layout/activity_main.xml',LAYOUT);
+zip.file('app/src/main/res/values/strings.xml','<resources><string name="app_name">'+appName+'</string></resources>');
+zip.file('app/src/main/res/values/themes.xml','<resources><style name="Theme.WebToApk" parent="Theme.Material3.DayNight.NoActionBar"><item name="colorPrimary">'+theme+'</item></style></resources>');
+zip.file('.github/workflows/build-apk.yml',WORKFLOW);
+zip.file('README_BUILD_AR.md','# '+appName+'\n\nمشروع WebView لـ '+url+' (وُلّد عبر any_2_apk)\n\n## بناء APK محلياً\n1. افتح المجلد في Android Studio\n2. Run > Run app\n3. أو: `./gradlew assembleDebug` ← `app/build/outputs/apk/debug/app-debug.apk`\n\n## بناء سحابي مجاني\n1. ارفع المشروع إلى GitHub\n2. تبويب Actions ← حمّل `app-debug.apk`\n');
+if(iconFile){const buf=await iconFile.arrayBuffer();zip.file('icon-original.png',buf);}
+const blob=await zip.generateAsync({type:'blob'});
+const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=pkg+'-webview.zip';a.click();
+setTimeout(()=>URL.revokeObjectURL(a.href),5000);
+document.getElementById('done').innerHTML='<div class="ok">✅ تم توليد <b>'+pkg+'-webview.zip</b><ol><li><b>سحابياً (الأسهل):</b> ارفع محتويات الـ ZIP إلى مستودع GitHub جديد ← تبويب Actions ← حمّل <code>app-debug.apk</code>.</li><li><b>محلياً:</b> افتحه في Android Studio ← Run، أو <code>./gradlew assembleDebug</code>.</li><li><b>فوري:</b> جرّب PWABuilder.com بنفس الرابط.</li></ol></div>';
+}catch(ex){err('حدث خطأ أثناء التوليد: '+ex.message);}
+btn.disabled=false;btn.textContent='⚙️ توليد وتحميل مشروع APK (ZIP)';
+});
+</script>
+</body></html>
