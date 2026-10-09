@@ -1,42 +1,114 @@
 <!doctype html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>any_2_apk | حوّل موقعك إلى APK</title>
+<title>any_2_apk — Turn Any Website into an Android App</title>
+<meta name="description" content="any_2_apk converts any website into a ready-to-build Android (WebView) project. Free, 100% in-browser, no signup.">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <style>
-body{font-family:Segoe UI,Tahoma,Arial;background:#f1f5f9;margin:0}
-main{max-width:660px;margin:30px auto;background:#fff;padding:24px;border-radius:14px;box-shadow:0 4px 20px #0001}
-h1{color:#1a73e8;margin-top:0}
-label{display:block;margin:12px 0 4px;font-weight:bold}
-input{width:100%;padding:10px;border:1px solid #cbd5e1;border-radius:8px;box-sizing:border-box}
-button{background:#1a73e8;color:#fff;border:0;padding:12px 20px;border-radius:8px;font-size:16px;cursor:pointer;margin-top:16px;width:100%}
-button:disabled{background:#94a3b8;cursor:wait}
-.msg{background:#fef3c7;padding:10px;border-radius:8px;margin:8px 0}
-.ok{background:#dcfce7;padding:12px;border-radius:8px;margin:12px 0}
-.note{background:#eef2ff;padding:12px;border-radius:8px;margin-top:16px;font-size:14px}
-code{background:#f1f5f9;padding:2px 8px;border-radius:6px}
-ol{line-height:2}
-footer{text-align:center;color:#64748b;font-size:13px;margin-top:16px}
+:root{
+  --ink:#0f172a; --muted:#64748b; --card:#ffffff; --bg:#f4f6fb;
+  --brand1:#4f46e5; --brand2:#7c3aed; --accent:#22d3ee;
+  --ok-bg:#dcfce7; --ok-tx:#166534; --warn-bg:#fef3c7; --warn-tx:#92400e;
+}
+*{box-sizing:border-box}
+body{font-family:"Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;background:var(--bg);margin:0;color:var(--ink)}
+/* NAV */
+.nav{display:flex;align-items:center;justify-content:space-between;max-width:960px;margin:0 auto;padding:18px 20px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:19px;letter-spacing:.2px}
+.brand small{font-weight:600;color:var(--muted);font-size:12px;display:block;line-height:1}
+.nav a.gh{font-size:14px;color:var(--brand1);font-weight:700;text-decoration:none;border:1px solid #c7d2fe;background:#eef2ff;padding:8px 14px;border-radius:999px}
+/* HERO */
+.hero{background:radial-gradient(1000px 400px at 80% -10%,#22d3ee33,transparent),linear-gradient(135deg,#1e1b4b,#4c1d95 55%,#6d28d9);color:#fff;padding:56px 20px 110px;text-align:center}
+.hero h1{font-size:clamp(28px,5vw,46px);margin:14px 0 10px;letter-spacing:-.5px}
+.hero h1 .grad{background:linear-gradient(90deg,#a5b4fc,#22d3ee);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{color:#ddd6fe;max-width:600px;margin:0 auto;font-size:17px}
+.badges{display:flex;gap:8px;justify-content:center;margin-top:18px;flex-wrap:wrap}
+.badges span{background:#ffffff1c;border:1px solid #ffffff33;font-size:13px;padding:6px 14px;border-radius:999px}
+.logo-badge{display:inline-flex;background:#ffffff18;border:1px solid #ffffff2e;border-radius:20px;padding:10px}
+/* CARD */
+.wrap{max-width:720px;margin:-80px auto 0;padding:0 20px}
+.card{background:var(--card);border-radius:18px;box-shadow:0 12px 40px #1e1b4b22;padding:26px}
+.card h2{margin:0 0 4px;font-size:21px}
+.card p.sub{color:var(--muted);margin:0 0 6px;font-size:14px}
+label{display:block;margin:14px 0 5px;font-weight:700;font-size:14px}
+input[type=text],input:not([type]){width:100%;padding:11px 12px;border:1.5px solid #cbd5e1;border-radius:10px;font-size:15px}
+input:focus{outline:none;border-color:var(--brand1);box-shadow:0 0 0 3px #4f46e522}
+.row{display:flex;gap:12px}.row>div{flex:1}
+input[type=color]{width:100%;height:44px;border:1.5px solid #cbd5e1;border-radius:10px;padding:4px;background:#fff}
+.hint{font-size:12.5px;color:var(--muted);margin-top:4px}
+button#btn{background:linear-gradient(90deg,var(--brand1),var(--brand2));color:#fff;border:0;padding:14px 20px;border-radius:12px;font-size:16px;font-weight:800;cursor:pointer;margin-top:18px;width:100%;transition:transform .08s}
+button#btn:hover:not(:disabled){transform:translateY(-1px)}
+button#btn:disabled{opacity:.6;cursor:wait}
+.msg{background:var(--warn-bg);color:var(--warn-tx);padding:11px 14px;border-radius:10px;margin:10px 0;font-size:14px}
+.ok{background:var(--ok-bg);color:var(--ok-tx);padding:14px;border-radius:12px;margin:14px 0;font-size:14.5px}
+code{background:#eef2ff;color:#3730a3;padding:2px 8px;border-radius:6px;font-size:13px}
+ol{line-height:2;padding-left:22px;margin:8px 0 0}
+/* STEPS */
+.steps{max-width:960px;margin:34px auto;padding:0 20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.step{background:#fff;border-radius:16px;padding:20px;box-shadow:0 4px 16px #0f172a10}
+.step .n{display:inline-flex;width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--brand1),var(--brand2));color:#fff;font-weight:800;align-items:center;justify-content:center;margin-bottom:10px}
+.step h3{margin:0 0 6px;font-size:16px}.step p{margin:0;color:var(--muted);font-size:14px;line-height:1.6}
+.note{max-width:920px;margin:6px auto 0;padding:0 20px}
+.note div{background:#fffbeb;border:1px solid #fde68a;border-radius:14px;padding:16px 18px;font-size:14px;color:#78350f;line-height:1.7}
+footer{text-align:center;color:var(--muted);font-size:13.5px;padding:26px 16px 34px}
+footer b{color:var(--ink)}
 </style>
 </head>
-<body><main>
-<h1>📱 any_2_apk</h1>
-<p>حوّل أي موقع ويب إلى مشروع أندرويد (WebView) جاهز للبناء إلى APK — <b>يعمل كلياً في متصفحك</b> بدون سيرفر.</p>
-<div id="msgs"></div>
-<form id="f">
-<label>اسم التطبيق</label><input id="app_name" placeholder="مثال: متجري" required>
-<label>اسم الحزمة (Package)</label><input id="package" placeholder="com.example.myapp" required dir="ltr">
-<label>رابط الموقع</label><input id="url" placeholder="https://example.com" required dir="ltr">
-<label>لون التطبيق</label><input type="color" id="theme" value="#1a73e8">
-<label>أيقونة (اختياري PNG/JPG أقل من 2MB)</label><input type="file" id="icon" accept=".png,.jpg,.jpeg">
-<button type="submit" id="btn">⚙️ توليد وتحميل مشروع APK (ZIP)</button>
-</form>
-<div id="done"></div>
-<div class="note">⚠️ تنبيه صادق: لا توجد أداة تحوّل ملفات <b>exe</b> أو برامج ويندوز مباشرة إلى APK. الطريقة الصحيحة هي تغليف نسخة الويب (هذه الأداة) أو إعادة كتابة التطبيق بلغة أندرويد.</div>
-<footer>any_2_apk — نسخة Flask موجودة في المستودع (<code>app.py</code>) لمن يريد تشغيلها محلياً.</footer>
-</main>
+<body>
+<header class="nav">
+  <div class="brand">
+    <svg width="38" height="38" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+      <rect x="2" y="2" width="44" height="44" rx="12" fill="url(#g)"/>
+      <rect x="15" y="9" width="18" height="30" rx="4" stroke="#fff" stroke-width="2.5"/>
+      <line x1="21" y1="35" x2="27" y2="35" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M24 15v10M20.5 21.5L24 25l3.5-3.5" stroke="#22d3ee" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <defs><linearGradient id="g" x1="2" y1="2" x2="46" y2="46"><stop stop-color="#4f46e5"/><stop offset="1" stop-color="#7c3aed"/></linearGradient></defs>
+    </svg>
+    <span>any_2_apk<small>WEB → ANDROID</small></span>
+  </div>
+  <a class="gh" href="https://github.com/salim-studio/any_2_apk">★ GitHub</a>
+</header>
+<section class="hero">
+  <span class="logo-badge">
+    <svg width="52" height="52" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+      <rect x="15" y="9" width="18" height="30" rx="4" stroke="#fff" stroke-width="2.5"/>
+      <line x1="21" y1="35" x2="27" y2="35" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M24 15v10M20.5 21.5L24 25l3.5-3.5" stroke="#22d3ee" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </span>
+  <h1>Turn any website into <span class="grad">an Android app</span></h1>
+  <p>Enter your site details and download a complete Android (WebView) project — ready to build into an APK. Everything runs in your browser. Nothing is uploaded.</p>
+  <div class="badges"><span>⚡ 100% in-browser</span><span>🆓 Free forever</span><span>🔑 No signup</span><span>🛠️ WebView + Kotlin</span></div>
+</section>
+<div class="wrap"><div class="card">
+  <h2>⚙️ Generate your project</h2>
+  <p class="sub">Fill in the fields below, then hit generate to download the ZIP.</p>
+  <div id="msgs"></div>
+  <form id="f">
+    <label for="app_name">App name</label>
+    <input id="app_name" placeholder="e.g. My Store" required>
+    <label for="package">Package name</label>
+    <input id="package" placeholder="com.example.myapp" required dir="ltr">
+    <div class="hint">Lowercase, at least two segments: <code>com.company.app</code></div>
+    <label for="url">Website URL</label>
+    <input id="url" placeholder="https://example.com" required dir="ltr">
+    <div class="row">
+      <div><label for="theme">Theme color</label><input type="color" id="theme" value="#4f46e5"></div>
+      <div><label for="icon">Icon (optional, &lt; 2 MB)</label><input type="file" id="icon" accept=".png,.jpg,.jpeg" style="padding:9px"></div>
+    </div>
+    <button type="submit" id="btn">⬇ Generate &amp; download project (ZIP)</button>
+  </form>
+  <div id="done"></div>
+</div></div>
+<section class="steps">
+  <div class="step"><span class="n">1</span><h3>☁️ Easiest: free cloud build</h3><p>Upload the ZIP contents to a new GitHub repo → open the <code>Actions</code> tab → download your <code>app-debug.apk</code>. The included workflow builds it for you.</p></div>
+  <div class="step"><span class="n">2</span><h3>💻 Local build</h3><p>Open the project in Android Studio → Run, or run <code>./gradlew assembleDebug</code>. Your APK lands in <code>app/build/outputs/apk/debug/</code>.</p></div>
+  <div class="step"><span class="n">3</span><h3>🚀 Instant alternative</h3><p>Need an installable file with zero build steps? Paste the same URL into PWABuilder.com and download a ready APK.</p></div>
+</section>
+<div class="note"><div>⚠️ <b>An honest note:</b> no tool can convert Windows <b>.exe</b> programs directly into APKs — any site claiming one-click exe → apk is misleading. The correct paths are wrapping the web version (this tool) or rebuilding the app natively with Kotlin / Flutter.</div></div>
+<footer><b>any_2_apk</b> — Web → Android project generator<br>© 2026 salim-slimani. All rights reserved.</footer>
 <script>
 const PKG_RE = /^[a-z][a-z0-9_]*(\.[a-z][a-z0-9_]*)+$/;
 function err(m){document.getElementById('msgs').innerHTML='<div class="msg">'+m+'</div>';}
@@ -52,18 +124,19 @@ const WORKFLOW = "name: Build APK\non: [push, workflow_dispatch]\njobs:\n  build
 document.getElementById('f').addEventListener('submit', async (e)=>{
 e.preventDefault();
 document.getElementById('msgs').innerHTML='';
+document.getElementById('done').innerHTML='';
 const appName=document.getElementById('app_name').value.trim();
 const pkg=document.getElementById('package').value.trim();
-let url=document.getElementById('url').value.trim();
+const url=document.getElementById('url').value.trim();
 const theme=document.getElementById('theme').value;
 const iconFile=document.getElementById('icon').files[0];
 const errs=[];
-if(appName.length<2)errs.push('اسم التطبيق قصير جداً.');
-if(!PKG_RE.test(pkg))errs.push('اسم الحزمة غير صالح. مثال صحيح: com.example.myapp');
-try{const u=new URL(url);if(u.protocol!=='http:'&&u.protocol!=='https:')throw 0;}catch{errs.push('الرابط غير صالح. يجب أن يبدأ بـ https://');}
-if(iconFile&&iconFile.size>2*1024*1024)errs.push('حجم الأيقونة يجب أن يكون أقل من 2MB');
+if(appName.length<2)errs.push('App name is too short.');
+if(!PKG_RE.test(pkg))errs.push('Invalid package name. Valid example: com.example.myapp');
+try{const u=new URL(url);if(u.protocol!=='http:'&&u.protocol!=='https:')throw 0;}catch{errs.push('Invalid URL. It must start with https://');}
+if(iconFile&&iconFile.size>2*1024*1024)errs.push('Icon must be smaller than 2 MB.');
 if(errs.length){err(errs.join('<br>'));return;}
-const btn=document.getElementById('btn');btn.disabled=true;btn.textContent='⏳ جارٍ التوليد...';
+const btn=document.getElementById('btn');btn.disabled=true;btn.textContent='⏳ Generating…';
 try{
 const zip=new JSZip();
 const allowHttp=url.startsWith('http://');
@@ -75,14 +148,14 @@ zip.file('app/src/main/res/layout/activity_main.xml',LAYOUT);
 zip.file('app/src/main/res/values/strings.xml','<resources><string name="app_name">'+appName+'</string></resources>');
 zip.file('app/src/main/res/values/themes.xml','<resources><style name="Theme.WebToApk" parent="Theme.Material3.DayNight.NoActionBar"><item name="colorPrimary">'+theme+'</item></style></resources>');
 zip.file('.github/workflows/build-apk.yml',WORKFLOW);
-zip.file('README_BUILD_AR.md','# '+appName+'\n\nمشروع WebView لـ '+url+' (وُلّد عبر any_2_apk)\n\n## بناء APK محلياً\n1. افتح المجلد في Android Studio\n2. Run > Run app\n3. أو: `./gradlew assembleDebug` ← `app/build/outputs/apk/debug/app-debug.apk`\n\n## بناء سحابي مجاني\n1. ارفع المشروع إلى GitHub\n2. تبويب Actions ← حمّل `app-debug.apk`\n');
+zip.file('README_BUILD_EN.md','# '+appName+'\n\nWebView project for '+url+' (generated with any_2_apk, (c) 2026 salim-slimani)\n\n## Local build\n1. Open the folder in Android Studio\n2. Run > Run app\n3. Or: `./gradlew assembleDebug` -> `app/build/outputs/apk/debug/app-debug.apk`\n\n## Free cloud build\n1. Push this project to GitHub\n2. Actions tab -> download `app-debug.apk`\n');
 if(iconFile){const buf=await iconFile.arrayBuffer();zip.file('icon-original.png',buf);}
 const blob=await zip.generateAsync({type:'blob'});
 const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=pkg+'-webview.zip';a.click();
 setTimeout(()=>URL.revokeObjectURL(a.href),5000);
-document.getElementById('done').innerHTML='<div class="ok">✅ تم توليد <b>'+pkg+'-webview.zip</b><ol><li><b>سحابياً (الأسهل):</b> ارفع محتويات الـ ZIP إلى مستودع GitHub جديد ← تبويب Actions ← حمّل <code>app-debug.apk</code>.</li><li><b>محلياً:</b> افتحه في Android Studio ← Run، أو <code>./gradlew assembleDebug</code>.</li><li><b>فوري:</b> جرّب PWABuilder.com بنفس الرابط.</li></ol></div>';
-}catch(ex){err('حدث خطأ أثناء التوليد: '+ex.message);}
-btn.disabled=false;btn.textContent='⚙️ توليد وتحميل مشروع APK (ZIP)';
+document.getElementById('done').innerHTML='<div class="ok">✅ Generated <b>'+pkg+'-webview.zip</b> — your download has started.<ol><li><b>Cloud (easiest):</b> upload the ZIP contents to a new GitHub repo → <code>Actions</code> tab → download <code>app-debug.apk</code>.</li><li><b>Local:</b> open it in Android Studio → Run, or <code>./gradlew assembleDebug</code>.</li><li><b>Instant:</b> try PWABuilder.com with the same URL.</li></ol></div>';
+}catch(ex){err('Generation failed: '+ex.message);}
+btn.disabled=false;btn.textContent='⬇ Generate & download project (ZIP)';
 });
 </script>
 </body></html>

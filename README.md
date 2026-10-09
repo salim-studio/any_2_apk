@@ -1,21 +1,31 @@
-# any_2_apk 📱
+# any_2_apk 📱 — Turn Any Website into an Android App
 
-حوّل أي موقع ويب إلى مشروع أندرويد (WebView) جاهز للبناء إلى APK.
+**Live site:** https://salim-studio.github.io/any_2_apk/
 
-## التشغيل
+Enter any website URL and download a complete Android (WebView) project — ready to build into an APK. The web version runs 100% in the browser (JSZip): nothing is uploaded, no signup.
+
+## How to get your APK (pick one)
+
+1. **Free cloud build (easiest):** upload the ZIP contents to a new GitHub repo → `Actions` tab → download `app-debug.apk` (a workflow is included).
+2. **Local build:** open the project in Android Studio → Run, or `./gradlew assembleDebug`.
+3. **Instant alternative:** paste the same URL into PWABuilder.com.
+
+## Run locally (static site)
+
+Just open `index.html` in a browser — no server needed.
+
+## Run the Flask version (optional)
 
 ```
 pip install -r requirements.txt
 python app.py
 ```
 
-ثم افتح: http://localhost:5000
+Then open http://localhost:5000
 
-## الاستخدام
-1. أدخل اسم التطبيق + اسم الحزمة (مثال: com.example.myapp) + رابط الموقع
-2. حمّل ملف ZIP الناتج
-3. ارفعه إلى GitHub → تبويب Actions → حمّل `app-debug.apk`
-   أو افتحه في Android Studio → Run
+## Honest note
 
-## تنبيه صادق
-لا يوجد تحويل مباشر من exe إلى APK. الطريقة الصحيحة: تغليف نسخة الويب (هذا التطبيق) أو إعادة البناء بـ Flutter/Kotlin.
+No tool can convert Windows `.exe` programs directly into APKs. The correct paths are wrapping the web version (this tool) or rebuilding natively with Kotlin / Flutter.
+
+---
+© 2026 salim-slimani. All rights reserved.
