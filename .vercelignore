@@ -1,0 +1,9 @@
+# Static-only deployment: keep the Flask dev-server files out of the
+# Vercel output so no serverless function is created or invoked.
+app.py
+generator.py
+requirements.txt
+templates/
+generated/
+__pycache__/
+.github/
